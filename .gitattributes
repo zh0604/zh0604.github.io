@@ -1,0 +1,7 @@
+# 强制 LF 换行，确保 SRI 完整性 hash 一致
+*.css text eol=lf
+*.js  text eol=lf
+*.html text eol=lf
+*.xml text eol=lf
+*.json text eol=lf
+*.svg text eol=lf
