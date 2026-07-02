@@ -31,7 +31,7 @@ summaryLength: 100
 # ============================================
 params:
   env: production
-  author: "你的名字"
+  author: "zh"
   defaultTheme: dark       # auto / dark / light — 暗色编辑式风格
   disableThemeToggle: false
   ShowShareButtons: true
@@ -45,7 +45,7 @@ params:
   ShowRssButtonInSectionTermList: true
   ShowFullTextinRSS: false
   ShowPageNums: true
-  hideFooter: false
+  hideFooter: true
   disableSpecial1stPost: false
   disableScrollToTop: false
   comments: false
@@ -58,7 +58,7 @@ params:
   # 个人资料模式（二选一：homeInfoParams 或 profileMode）
   profileMode:
     enabled: true
-    title: "你好，我是 你的名字"
+    title: "你好，我是 zh"
     subtitle: "欢迎来到我的个人博客。这里记录我的学习、思考和创作。"
     imageUrl: ""          # 头像URL，可选
     imageTitle: "avatar"
