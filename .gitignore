@@ -1,3 +1,6 @@
+# Hugo 构建输出（不推送）
+/public/
+
 # Node.js
 node_modules/
 
