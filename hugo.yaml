@@ -4,7 +4,6 @@
 # ============================================
 
 baseURL: "https://zh0604.github.io/"
-publishDir: docs
 locale: "zh-CN"
 title: "我的博客"
 theme: "PaperMod"
