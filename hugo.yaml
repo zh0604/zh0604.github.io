@@ -1,0 +1,184 @@
+# ============================================
+# Hugo + PaperMod 博客配置
+# 参考: dejavu.moe + hugo-PaperMod
+# ============================================
+
+baseURL: "https://example.github.io/"
+locale: "zh-CN"
+title: "我的博客"
+theme: "PaperMod"
+enableRobotsTXT: true
+enableEmoji: true
+hasCJKLanguage: true
+
+# 分页
+paginate: 5
+
+# 构建选项
+buildDrafts: false
+buildFuture: false
+buildExpired: false
+
+# 摘要长度
+summaryLength: 100
+
+# Google Analytics (可选，填入你的ID即生效)
+# googleAnalytics: G-XXXXXXXXXX
+
+# ============================================
+# 站点参数 (PaperMod 主题配置)
+# ============================================
+params:
+  env: production
+  author: "你的名字"
+  defaultTheme: dark       # auto / dark / light — 暗色编辑式风格
+  disableThemeToggle: false
+  ShowShareButtons: true
+  ShowReadingTime: true
+  ShowWordCount: true
+  ShowPostNavLinks: true
+  ShowBreadCrumbs: true
+  ShowCodeCopyButtons: true
+  ShowToc: true
+  TocOpen: true
+  ShowRssButtonInSectionTermList: true
+  ShowFullTextinRSS: false
+  ShowPageNums: true
+  hideFooter: false
+  disableSpecial1stPost: false
+  disableScrollToTop: false
+  comments: false
+
+  # 首页个人信息模式
+  # homeInfoParams:
+  #   Title: "你好，世界 👋"
+  #   Content: "欢迎来到我的个人博客。这里记录了我的学习、思考和创作。"
+
+  # 个人资料模式（二选一：homeInfoParams 或 profileMode）
+  profileMode:
+    enabled: true
+    title: "你好，我是 你的名字"
+    subtitle: "欢迎来到我的个人博客。这里记录我的学习、思考和创作。"
+    imageUrl: ""          # 头像URL，可选
+    imageTitle: "avatar"
+    # 首页按钮
+    buttons:
+      - name: "📝 文章"
+        url: "posts"
+      - name: "🏷️ 标签"
+        url: "tags"
+      - name: "🔍 搜索"
+        url: "search"
+      - name: "👤 关于"
+        url: "about"
+
+  # 社交图标
+  socialIcons:
+    - name: "github"
+      url: "https://github.com/yourusername"
+    - name: "email"
+      url: "mailto:hello@example.com"
+    - name: "rss"
+      url: "index.xml"
+
+  # 编辑链接（指向你的GitHub仓库）
+  editPost:
+    URL: "https://github.com/yourusername/yourusername.github.io/tree/main/content"
+    Text: "在 GitHub 上编辑"
+    appendFilePath: true
+
+  # 搜索 (Fuse.js)
+  fuseOpts:
+    isCaseSensitive: false
+    shouldSort: true
+    location: 0
+    distance: 1000
+    threshold: 0.4
+    minMatchCharLength: 0
+    keys:
+      - "title"
+      - "permalink"
+      - "summary"
+      - "content"
+
+  # SEO
+  label:
+    text: "🏠 首页"
+    icon: ""
+    iconHeight: 24
+
+  assets:
+    disableFingerprinting: false
+    favicon: ""
+    favicon16x16: ""
+    favicon32x32: ""
+    apple_touch_icon: ""
+    safari_pinned_tab: ""
+
+  # 封面图响应式配置
+  cover:
+    linkFullImages: true
+    responsiveImages: true
+
+# ============================================
+# 菜单
+# ============================================
+menu:
+  main:
+    - identifier: posts
+      name: 📝 文章
+      url: /posts/
+      weight: 10
+    - identifier: tags
+      name: 🏷️ 标签
+      url: /tags/
+      weight: 20
+    - identifier: search
+      name: 🔍 搜索
+      url: /search/
+      weight: 30
+    - identifier: about
+      name: 👤 关于
+      url: /about/
+      weight: 40
+    - identifier: archives
+      name: 📂 归档
+      url: /archives/
+      weight: 50
+
+# ============================================
+# 分类法
+# ============================================
+taxonomies:
+  category: categories
+  tag: tags
+  series: series
+
+# ============================================
+# Markdown 渲染
+# ============================================
+markup:
+  goldmark:
+    renderer:
+      unsafe: true
+  highlight:
+    noClasses: false
+    anchorLineNos: false
+    codeFences: true
+    guessSyntax: true
+    lineNos: false
+    style: monokai
+
+# ============================================
+# Sitemap / 输出格式
+# ============================================
+sitemap:
+  changefreq: weekly
+  filename: sitemap.xml
+  priority: 0.5
+
+outputs:
+  home:
+    - HTML
+    - RSS
+    - JSON

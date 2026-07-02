@@ -1,0 +1,20 @@
+# Hugo 构建输出
+/public/
+
+# Node.js
+node_modules/
+
+# 临时文件
+*.tmp
+*.log
+
+# 操作系统
+.DS_Store
+Thumbs.db
+
+# IDE
+.vscode/
+.idea/
+
+# 旧版网站备份（不用上传）
+jingtaiwangzhan_backup_*/

@@ -1,0 +1,682 @@
+/* ============================================
+   PaperMod → 暗色编辑式风格 完全重写
+   色调 / 字体 / 动效 与备份版一致
+   ============================================ */
+
+/* --- 覆盖 PaperMod 全局 CSS 变量 --- */
+:root {
+  --theme: #0a0a0b;
+  --entry: #16161a;
+  --primary: #ff6b4a;
+  --primary-dim: rgba(255, 107, 74, 0.15);
+  --secondary: #8b8a8d;
+  --tertiary: #5c5b5e;
+  --content: #e8e6e3;
+  --code-bg: #111114;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-light: rgba(255, 255, 255, 0.1);
+  --radius: 8px;
+  --radius-lg: 16px;
+  --gap: 24px;
+  --nav-height: 72px;
+}
+
+/* 亮色模式也强制暗色（PaperMod 的 body.light 会覆盖） */
+body.light {
+  --theme: #0a0a0b;
+  --entry: #16161a;
+  --primary: #ff6b4a;
+  --primary-dim: rgba(255, 107, 74, 0.15);
+  --secondary: #8b8a8d;
+  --tertiary: #5c5b5e;
+  --content: #e8e6e3;
+  --code-bg: #111114;
+  --border: rgba(255, 255, 255, 0.06);
+  --border-light: rgba(255, 255, 255, 0.1);
+}
+
+/* --- 基础 --- */
+html {
+  scroll-behavior: smooth;
+  scrollbar-width: thin;
+  scrollbar-color: var(--tertiary) var(--theme);
+}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: var(--theme); }
+::-webkit-scrollbar-thumb { background: var(--tertiary); border-radius: 3px; }
+
+body {
+  font-family: 'Noto Serif SC', Georgia, 'Noto Sans SC', sans-serif;
+  background: var(--theme);
+  color: var(--content);
+  line-height: 1.7;
+}
+
+a { color: inherit; transition: color 0.2s ease; }
+
+/* --- 背景纹理（完全复刻备份版） --- */
+.bg-texture {
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(circle at 30% 50%, rgba(255,107,74,0.03) 0%, transparent 50%),
+    radial-gradient(circle at 70% 20%, rgba(255,255,255,0.02) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+.bg-noise {
+  position: fixed;
+  inset: 0;
+  background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.008) 2px, rgba(255,255,255,0.008) 3px);
+  pointer-events: none;
+  z-index: 0;
+}
+
+main { position: relative; z-index: 1; }
+
+/* --- 页面加载遮罩（复刻备份版 loader） --- */
+.loader {
+  position: fixed;
+  inset: 0;
+  background: var(--theme);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.6s ease, visibility 0.6s ease;
+}
+.loader.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+.loader-bar {
+  width: 0;
+  height: 2px;
+  background: var(--primary);
+  animation: loadBar 1.2s cubic-bezier(0.25, 0.1, 0.25, 1) forwards;
+}
+@keyframes loadBar {
+  0%   { width: 0; }
+  50%  { width: 60%; }
+  100% { width: 100%; }
+}
+
+/* --- 导航栏（复刻备份版） --- */
+.nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  padding: 0 2.5rem;
+  height: var(--nav-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(10, 10, 11, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  z-index: 100;
+}
+.nav .logo a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--primary);
+  letter-spacing: 0.05em;
+}
+
+#menu {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+#menu li a {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--secondary);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  position: relative;
+  padding: 0.3rem 0;
+}
+#menu li a::after {
+  content: '';
+  position: absolute;
+  bottom: 0; left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--primary);
+  transition: width 0.25s ease;
+}
+#menu li a:hover,
+#menu li a:focus,
+#menu .active a {
+  color: var(--content);
+}
+#menu li a:hover::after,
+#menu .active a::after {
+  width: 100%;
+}
+
+/* 隐藏 PaperMod 默认的 menu 及其他多余 UI */
+#menu .menu-separator { display: none; }
+
+/* 主题切换按钮 */
+#theme-toggle {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--secondary);
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+#theme-toggle:active { transform: scale(0.85); }
+#theme-toggle:hover { color: var(--content); }
+
+/* --- 页面加载淡入 --- */
+main {
+  animation: pageIn 0.4s ease-out both;
+}
+@keyframes pageIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- 首页 Profile Mode → Hero 风格 --- */
+.profile {
+  min-height: calc(100vh - var(--nav-height));
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem 2.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+  position: relative;
+}
+.profile_inner h1 {
+  font-size: clamp(2.5rem, 8vw, 5rem);
+  font-weight: 900;
+  line-height: 1.05;
+  letter-spacing: -0.03em;
+  color: var(--content);
+  margin-bottom: 0.3rem;
+}
+.profile_inner h1 span,
+.profile_inner h1 br { display: block; }
+.profile_inner .entry-content,
+.profile_inner > span {
+  display: block;
+  font-size: 1.2rem;
+  color: var(--secondary);
+  max-width: 500px;
+  margin-top: 1rem;
+  line-height: 1.8;
+}
+
+/* Profile 按钮 → 备份版 btn 风格 */
+.profile .buttons {
+  display: flex;
+  gap: 0.8rem;
+  flex-wrap: wrap;
+  margin-top: 2.5rem;
+}
+.profile .buttons a {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.8rem 1.6rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 0.05em;
+  border-radius: var(--radius);
+  background: var(--primary);
+  color: #0a0a0b;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.profile .buttons a:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(255, 107, 74, 0.25);
+}
+
+/* Hero 视觉元素（完全复刻备份版） */
+.hero-shape {
+  position: fixed;
+  right: 5%;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 400px;
+  height: 400px;
+  border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%;
+  background: linear-gradient(135deg, rgba(255,107,74,0.2), transparent);
+  filter: blur(80px);
+  pointer-events: none;
+  z-index: 0;
+  animation: morphShape 8s ease-in-out infinite;
+}
+@keyframes morphShape {
+  0%, 100% { border-radius: 40% 60% 70% 30% / 40% 50% 60% 50%; }
+  25%      { border-radius: 60% 40% 30% 70% / 50% 60% 40% 50%; }
+  50%      { border-radius: 30% 60% 70% 40% / 50% 60% 30% 60%; }
+  75%      { border-radius: 60% 40% 50% 50% / 40% 50% 60% 50%; }
+}
+.hero-dots {
+  position: fixed;
+  right: 5%;
+  top: 20%;
+  width: 200px;
+  height: 300px;
+  background-image: radial-gradient(circle, var(--primary) 1px, transparent 1px);
+  background-size: 24px 24px;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* 社交图标行 */
+.social-icons {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1.2rem;
+}
+.social-icons a {
+  font-size: 1.2rem;
+  color: var(--secondary);
+  transition: color 0.2s;
+}
+.social-icons a:hover { color: var(--primary); }
+
+/* --- 文章列表卡片（复刻备份版 project-card 风格） --- */
+.post-entry,
+.first-entry {
+  display: grid;
+  grid-template-columns: 1fr;
+  padding: 2.5rem;
+  margin-bottom: 0;
+  background: var(--entry);
+  border: 1px solid var(--border);
+  border-radius: 0;
+  transition: background 0.25s, border-color 0.25s, transform 0.25s;
+  position: relative;
+  overflow: hidden;
+}
+.post-entry + .post-entry,
+.first-entry + .post-entry {
+  border-top: none;
+}
+
+/* 文章列表容器用边框包裹 */
+.main .posts-group,
+.main .first-entry {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+.main .first-entry {
+  border-bottom: 1px solid var(--border);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+.main .posts-group {
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  border-top: none;
+}
+.main .posts-group .post-entry:last-child {
+  border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+/* 卡片 hover */
+.post-entry:hover,
+.first-entry:hover {
+  background: #111114;
+  transform: translateY(-1px);
+}
+
+/* 左侧色条 hover 动画 */
+.post-entry::before,
+.first-entry::before {
+  content: '';
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 3px;
+  background: var(--primary);
+  transform: scaleY(0);
+  transition: transform 0.35s cubic-bezier(0.25,0.1,0.25,1);
+  transform-origin: top;
+}
+.post-entry:hover::before,
+.first-entry:hover::before {
+  transform: scaleY(1);
+}
+
+/* 文章标题 */
+.post-entry .entry-header h2,
+.first-entry .entry-header h2 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.6rem;
+  transition: color 0.2s;
+}
+.post-entry:hover .entry-header h2,
+.first-entry:hover .entry-header h2 {
+  color: var(--primary);
+}
+
+/* 摘要文字 */
+.post-entry .entry-content,
+.first-entry .entry-content {
+  color: var(--secondary);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin: 0.5rem 0 0;
+  max-width: 600px;
+}
+
+/* 标签小胶囊 */
+.post-tags a,
+.post-meta .post-tags a {
+  display: inline-block;
+  padding: 0.25rem 0.7rem;
+  background: var(--primary-dim);
+  color: var(--primary);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.65rem;
+  border-radius: 4px;
+  letter-spacing: 0.05em;
+  margin: 0.3rem 0.4rem 0 0;
+  transition: transform 0.2s, background 0.2s;
+}
+.post-tags a:hover {
+  transform: translateY(-1px);
+  background: rgba(255,107,74,0.25);
+}
+
+/* 元信息 */
+.post-meta {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--tertiary);
+}
+
+/* --- 文章内页 --- */
+.post-header h1 {
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 900;
+  letter-spacing: -0.02em;
+}
+.post-content {
+  font-size: 1.05rem;
+  line-height: 1.8;
+}
+
+/* 文章内链接 */
+.post-content a {
+  color: var(--primary);
+  background: linear-gradient(to right, var(--primary), var(--primary)) no-repeat right bottom;
+  background-size: 0 1.5px;
+  transition: background-size 0.3s ease;
+}
+.post-content a:hover {
+  background-position: left bottom;
+  background-size: 100% 1.5px;
+}
+
+/* 代码块 */
+.post-content pre {
+  background: #111114;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 1.5rem;
+}
+.post-content code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.85rem;
+}
+
+/* 复制按钮 */
+.post-content .highlight .copy-code {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  background: var(--entry);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  color: var(--secondary);
+  transition: all 0.2s;
+}
+.post-content .highlight .copy-code:hover {
+  background: var(--primary-dim);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+/* 引用块 */
+.post-content blockquote {
+  border-left: 4px solid var(--primary);
+  background: var(--entry);
+  padding: 0.8rem 1.2rem;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  margin: 1.5em 0;
+}
+
+/* 表格 */
+.post-content table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1.5em 0;
+}
+.post-content table th {
+  background: var(--entry);
+  font-weight: 600;
+  padding: 0.6rem 1rem;
+  text-align: left;
+  border-bottom: 2px solid var(--border);
+}
+.post-content table td {
+  padding: 0.6rem 1rem;
+  border-bottom: 1px solid var(--border);
+}
+.post-content table tr:hover td {
+  background: var(--entry);
+}
+
+/* 图片 */
+.post-content img {
+  border-radius: var(--radius);
+  max-width: 100%;
+}
+
+/* 分割线 */
+.post-content hr {
+  border: none;
+  border-top: 1px solid var(--border);
+  margin: 2.5em 0;
+}
+
+/* 目录 TOC */
+.toc details summary {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.8rem;
+  color: var(--secondary);
+  margin-bottom: 0.8rem;
+  cursor: pointer;
+}
+.toc .toc-content a {
+  font-size: 0.85rem;
+  color: var(--secondary);
+  transition: color 0.2s;
+}
+.toc .toc-content a:hover { color: var(--primary); }
+
+/* 面包屑 */
+.breadcrumbs {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--tertiary);
+  letter-spacing: 0.05em;
+}
+.breadcrumbs a { color: var(--secondary); }
+.breadcrumbs a:hover { color: var(--primary); }
+
+/* 前后文章导航 */
+.paginav {
+  display: flex;
+  gap: 1px;
+  margin-top: 3rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+}
+.paginav a {
+  flex: 1;
+  padding: 1.5rem;
+  background: var(--entry);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--secondary);
+  transition: all 0.25s;
+}
+.paginav a:hover {
+  background: #111114;
+  color: var(--content);
+}
+.paginav .prev { text-align: left; }
+.paginav .next { text-align: right; }
+
+/* 分享按钮 */
+.share-buttons {
+  display: flex;
+  gap: 0.6rem;
+  margin: 2rem 0;
+}
+.share-buttons a {
+  font-size: 0.8rem;
+  color: var(--secondary);
+  transition: color 0.2s;
+}
+.share-buttons a:hover { color: var(--primary); }
+
+/* --- 页脚 --- */
+footer {
+  padding: 2rem 2.5rem;
+  border-top: 1px solid var(--border);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  color: var(--tertiary);
+  letter-spacing: 0.05em;
+}
+footer a { color: var(--secondary); }
+footer a:hover { color: var(--primary); }
+
+/* --- 标签/分类页 --- */
+.terms-tags li a {
+  padding: 0.4rem 1rem;
+  background: var(--entry);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--secondary);
+  transition: all 0.2s;
+}
+.terms-tags li a:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+  background: var(--primary-dim);
+}
+
+/* --- 搜索页 --- */
+#searchbox input {
+  width: 100%;
+  padding: 1rem 1.2rem;
+  background: var(--entry);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  color: var(--content);
+  font-family: 'Noto Serif SC', serif;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+}
+#searchbox input:focus {
+  border-color: var(--primary);
+}
+#searchResults li {
+  padding: 1rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  margin-bottom: 0.8rem;
+  background: var(--entry);
+}
+
+/* --- 归档页 --- */
+.archive-entry {
+  padding: 1.2rem 1.5rem;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--entry);
+  margin-bottom: 0.6rem;
+  transition: background 0.2s;
+}
+.archive-entry:hover { background: #111114; }
+
+/* --- 分页 --- */
+.pagination {
+  display: flex;
+  justify-content: center;
+  gap: 0.5rem;
+  margin-top: 3rem;
+}
+.pagination a {
+  padding: 0.6rem 1.2rem;
+  background: var(--entry);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  color: var(--secondary);
+  transition: all 0.2s;
+}
+.pagination a:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+.pagination .active a {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #0a0a0b;
+}
+
+/* 返回顶部 */
+#top-link {
+  background: var(--primary);
+  color: #0a0a0b;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+}
+#top-link:hover { transform: translateY(-3px); }
+
+/* --- 滚动入场动画（完全复刻备份版 .reveal） --- */
+.reveal-item {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.25, 0.1, 0.25, 1),
+              transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1);
+}
+.reveal-item.reveal-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- 响应式 --- */
+@media (max-width: 1024px) {
+  .hero-shape, .hero-dots { display: none; }
+}
+@media (max-width: 768px) {
+  .nav { padding: 0 1.2rem; }
+  #menu { gap: 1rem; }
+  #menu li a { font-size: 0.7rem; }
+  .profile { padding: 2rem 1.2rem; }
+  .post-entry, .first-entry { padding: 1.5rem; }
+  .post-entry .entry-header h2,
+  .first-entry .entry-header h2 { font-size: 1.3rem; }
+}

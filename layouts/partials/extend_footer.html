@@ -1,0 +1,126 @@
+<script>
+(function() {
+  'use strict';
+
+  // ============================================
+  // 1. 页面加载遮罩
+  // ============================================
+  var loader = document.querySelector('.loader');
+  if (loader) {
+    window.addEventListener('load', function() {
+      setTimeout(function() { loader.classList.add('hidden'); }, 800);
+    });
+    setTimeout(function() { if (loader) loader.classList.add('hidden'); }, 3000);
+  }
+
+  // ============================================
+  // 2. 当前页导航高亮
+  // ============================================
+  var path = window.location.pathname;
+  document.querySelectorAll('#menu a').forEach(function(a) {
+    var href = a.getAttribute('href');
+    if (href && path.startsWith(href) && href !== '/') {
+      a.parentElement.classList.add('active');
+    } else if (href === '/' && (path === '/' || path === '')) {
+      a.parentElement.classList.add('active');
+    }
+  });
+
+  // ============================================
+  // 3. 滚动入场动画（Intersection Observer）
+  // ============================================
+  var revealObserver = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('reveal-visible');
+        revealObserver.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.12, rootMargin: '0px 0px -60px 0px' });
+
+  document.querySelectorAll('.post-entry, .first-entry, .archive-entry, .terms-tags li, .toc').forEach(function(el) {
+    el.classList.add('reveal-item');
+    revealObserver.observe(el);
+  });
+
+  // 卡片逐条延迟入场
+  var entries = document.querySelectorAll('.post-entry, .first-entry');
+  entries.forEach(function(el, i) { el.style.transitionDelay = (i * 0.06) + 's'; });
+
+  // ============================================
+  // 4. Hero 色块 + 圆点 视差效果
+  // ============================================
+  var heroShape = document.querySelector('.hero-shape');
+  var heroDots  = document.querySelector('.hero-dots');
+
+  if (heroShape) {
+    document.addEventListener('mousemove', function(e) {
+      var moveX = (e.clientX - window.innerWidth / 2) * 0.02;
+      var moveY = (e.clientY - window.innerHeight / 2) * 0.02;
+      heroShape.style.transform = 'translate(calc(-50% + ' + moveX + 'px), calc(-50% + ' + moveY + 'px))';
+      if (heroDots) {
+        heroDots.style.transform = 'translate(' + (moveX * -0.5) + 'px, ' + (moveY * -0.5) + 'px)';
+      }
+    });
+  }
+
+  // ============================================
+  // 5. 统计数字动画（如果 about 页有）
+  // ============================================
+  var statNums = document.querySelectorAll('.stat-num');
+  if (statNums.length) {
+    var statObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var numEl = entry.target;
+          var target = parseInt(numEl.getAttribute('data-target'), 10);
+          var duration = 1500;
+          var start = performance.now();
+
+          function animateNum(now) {
+            var progress = Math.min((now - start) / duration, 1);
+            var eased = 1 - Math.pow(2, -10 * progress);
+            numEl.textContent = Math.floor(target * eased);
+            if (progress < 1) requestAnimationFrame(animateNum);
+          }
+          requestAnimationFrame(animateNum);
+          statObserver.unobserve(numEl);
+        }
+      });
+    }, { threshold: 0.5 });
+    statNums.forEach(function(el) { statObserver.observe(el); });
+  }
+
+  // ============================================
+  // 6. 键盘彩蛋：ESC 暂停跑马灯
+  // ============================================
+  var marqueePaused = false;
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      var track = document.querySelector('.marquee-track');
+      if (track) {
+        marqueePaused = !marqueePaused;
+        track.style.animationPlayState = marqueePaused ? 'paused' : 'running';
+      }
+    }
+  });
+
+  // ============================================
+  // 7. 控制台问候
+  // ============================================
+  console.log(
+    '%c✦ 欢迎来到我的网站 %c| %c用心构建每一个像素',
+    'color: #ff6b4a; font-size: 1.2rem;',
+    'color: #8b8a8d;',
+    'color: #e8e6e3;'
+  );
+
+})();
+</script>
+
+<!-- 自定义页脚 -->
+<div style="text-align:center;padding:1.5rem;font-family:'JetBrains Mono',monospace;font-size:0.7rem;color:var(--tertiary);">
+  <span>© {{ now.Format "2006" }} <a href="{{ .Site.BaseURL }}">{{ .Site.Title }}</a></span>
+  <span style="margin:0 8px;">·</span>
+  <span>由 <a href="https://gohugo.io" target="_blank" rel="noopener">Hugo</a> + <a href="https://github.com/adityatelange/hugo-PaperMod" target="_blank" rel="noopener">PaperMod</a> 驱动</span>
+</div>
