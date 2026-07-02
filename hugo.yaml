@@ -109,7 +109,7 @@ params:
     iconHeight: 24
 
   assets:
-    disableFingerprinting: false
+    disableFingerprinting: true
     favicon: ""
     favicon16x16: ""
     favicon32x32: ""
