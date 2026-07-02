@@ -3,7 +3,7 @@
 # 参考: dejavu.moe + hugo-PaperMod
 # ============================================
 
-baseURL: "https://example.github.io/"
+baseURL: "https://zh0604.github.io/"
 locale: "zh-CN"
 title: "我的博客"
 theme: "PaperMod"
@@ -76,7 +76,7 @@ params:
   # 社交图标
   socialIcons:
     - name: "github"
-      url: "https://github.com/yourusername"
+      url: "https://github.com/zh0604"
     - name: "email"
       url: "mailto:hello@example.com"
     - name: "rss"
@@ -84,7 +84,7 @@ params:
 
   # 编辑链接（指向你的GitHub仓库）
   editPost:
-    URL: "https://github.com/yourusername/yourusername.github.io/tree/main/content"
+    URL: "https://github.com/zh0604/zh0604.github.io/tree/main/content"
     Text: "在 GitHub 上编辑"
     appendFilePath: true
 
