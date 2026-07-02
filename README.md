@@ -8,10 +8,8 @@ hugo server -D
 # http://localhost:1313
 ```
 
-## 发布
+## 发布（每次更新执行这3条）
 ```bash
-hugo --minify    # 构建到 docs/
-git add . && git commit -m "更新" && git push
+hugo --minify && xcopy /E /I /Y public\* . && rmdir /s /q public
+git add -A && git commit -m "更新" && git push
 ```
-
-GitHub → Settings → Pages → `/docs` 文件夹
