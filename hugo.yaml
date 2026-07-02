@@ -12,7 +12,8 @@ enableEmoji: true
 hasCJKLanguage: true
 
 # 分页
-paginate: 5
+pagination:
+  pagerSize: 5
 
 # 构建选项
 buildDrafts: false
