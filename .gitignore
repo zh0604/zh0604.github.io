@@ -1,4 +1,4 @@
-# Hugo 构建输出（不推送）
+# Hugo 构建临时目录
 /public/
 
 # Node.js
@@ -16,5 +16,5 @@ Thumbs.db
 .vscode/
 .idea/
 
-# 旧版网站备份（不用上传）
+# 旧版网站备份
 jingtaiwangzhan_backup_*/
