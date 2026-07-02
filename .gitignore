@@ -1,5 +1,6 @@
 # Hugo 构建临时目录
 /public/
+/docs/
 
 # Node.js
 node_modules/
