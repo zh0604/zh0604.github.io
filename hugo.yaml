@@ -4,6 +4,9 @@
 # ============================================
 
 baseURL: "https://example.github.io/"
+
+# 输出到 docs/ 文件夹，GitHub Pages 可直接读取
+publishDir: docs
 locale: "zh-CN"
 title: "我的博客"
 theme: "PaperMod"
